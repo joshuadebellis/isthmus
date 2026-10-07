@@ -23,6 +23,8 @@ res.groups               # one group label per call (-1 = too small to call)
 
 Run `python -m isthmus` for a built-in self-test on three known cases.
 
+Nothing here is specific to audio: `gap_test` takes any set of feature vectors (behavior embeddings, single-cell profiles, latent spaces). So far it has only been validated on vocalizations.
+
 ## What is here
 
 - `isthmus/` - the method (minimum spanning tree / 0-dimensional persistent homology, locally normalized gaps, a null calibrated to sample size and intrinsic dimension).
