@@ -1,0 +1,7 @@
+data/
+*.pkl
+*.wav
+*.zip
+__pycache__/
+.venv/
+.idea/

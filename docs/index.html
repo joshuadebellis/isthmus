@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>isthmus: are animal calls islands or one landmass?</title>
+<meta name="description" content="A calibrated topological test for whether animal vocalizations come in discrete types or form a continuum.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fcfcfb; --surface: #ffffff; --ink: #0b0b0b; --ink2: #52514e; --muted: #8a8984;
+    --rule: #e6e5e0; --blue: #2a78d6; --orange: #eb6834; --code-bg: #f4f3ef;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1a1a19; --surface: #222221; --ink: #f4f4f2; --ink2: #c3c2b7; --muted: #8f8e88;
+            --rule: #34342f; --blue: #3987e5; --orange: #d95926; --code-bg: #262624; }
+    img.fig { background: #ffffff; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.65 "Source Serif 4", Georgia, serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 16px 96px; }
+  .wide { max-width: 1100px; margin: 28px auto; padding: 0 16px; }
+  h1, h2, h3, .kicker, nav, table, figcaption, .note { font-family: Inter, system-ui, sans-serif; }
+  .kicker { color: var(--blue); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: 13px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.12; margin: 8px 0 16px; letter-spacing: -.01em; }
+  h2 { font-size: 24px; margin: 56px 0 8px; letter-spacing: -.005em; }
+  h3 { font-size: 18px; margin: 32px 0 4px; }
+  .lede { font-size: 20px; color: var(--ink2); }
+  nav { font-size: 14px; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  figure { margin: 0; }
+  img.fig { width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 8px; display: block; }
+  figcaption { color: var(--ink2); font-size: 14px; line-height: 1.5; margin-top: 10px; }
+  .callout { border-left: 3px solid var(--blue); padding: 4px 0 4px 18px; margin: 28px 0; font-size: 19px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 18px 0; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { color: var(--ink2); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .table-wrap { overflow-x: auto; }
+  pre { background: var(--code-bg); border-radius: 8px; padding: 16px; overflow-x: auto; font: 14px/1.5 "JetBrains Mono", Consolas, monospace; }
+  code { font-family: "JetBrains Mono", Consolas, monospace; font-size: .9em; }
+  .note { font-size: 14px; color: var(--ink2); }
+  .diagram { margin: 24px 0; }
+  .diagram svg { width: 100%; height: auto; }
+  .diagram text { font-family: Inter, system-ui, sans-serif; fill: var(--ink2); font-size: 13px; }
+  .diagram .land { fill: var(--muted); opacity: .35; }
+  .diagram .call { fill: var(--blue); }
+  .diagram .call2 { fill: var(--orange); }
+  footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--ink2); font-family: Inter, system-ui, sans-serif; }
+  ol.refs { font-size: 15px; padding-left: 20px; }
+  ol.refs li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">isthmus · topological data analysis for bioacoustics</div>
+  <h1>Check for types before you cluster</h1>
+  <p class="lede">Standard clustering tools find 7–20 "call types" in simulated repertoires that have none. <strong>isthmus</strong> is a calibrated test that asks a simpler question first: is there empty space between kinds of calls at all?</p>
+  <nav>
+    <a href="#question">The question</a><a href="#method">The method</a><a href="#results">Results</a>
+    <a href="#limits">Limits &amp; next steps</a><a href="#code">Code</a><a href="#refs">References</a>
+    <a href="https://github.com/joshuadebellis/isthmus">GitHub repo</a>
+  </nav>
+</main>
+
+<div class="wide">
+  <figure>
+    <img class="fig" src="fig1.png" alt="Two rows of panels. Top, a Bengalese finch: HDBSCAN on UMAP finds 8 call types and the gap test also finds 8, with gaps far above the chance threshold. Bottom, a mouse: HDBSCAN on UMAP outlines 24 call types on an evenly spread cloud, while the gap test reports a continuum with every gap below the chance threshold.">
+    <figcaption><strong>Figure 1.</strong> Same pipeline, two animals. Left: HDBSCAN on a UMAP embedding (the approach popularized by Sainburg et al. 2020) outlines call types in both. Middle: the gap test finds 8 types for the finch and none for the mouse. Right: why. The finch's largest gaps between groups of syllables are 3–7× larger than smooth data produces by chance; every gap between mouse calls is smaller than chance.</figcaption>
+  </figure>
+</div>
+
+<main>
+  <h2 id="question">The question</h2>
+  <p>Do an animal's calls come in discrete types, like the syllables of a songbird, or do they vary along a continuum? The answer shapes almost everything downstream. Counting a "repertoire size", modelling call sequences, or asking what a call type means all assume the types exist.</p>
+  <p>The common shortcut is to project spectrograms with UMAP and cluster the result, or to score clusterability with the Hopkins statistic on the UMAP embedding. Both have a problem: UMAP is built to pull neighbourhoods apart, and it distorts high-dimensional data in ways that can create clusters (Chari &amp; Pachter 2023). In our simulations, Hopkins-on-UMAP gave a smooth one-dimensional continuum a score of 0.000, maximally "clustered", the same score it gave real finch syllables. It cannot tell the two apart.</p>
+  <p>Goffinet et al. (2021) made the key observation: if calls form distinct types, there should be no smooth chain of calls connecting different types. They showed this qualitatively for mouse calls. isthmus turns that idea into a test with a measured false-alarm rate.</p>
+
+  <h2 id="method">The method</h2>
+  <div class="diagram" role="img" aria-label="Diagram: on the left, three separate islands of calls, labelled discrete types. On the right, one landmass with narrow bridges between regions, labelled continuum.">
+    <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg">
+      <ellipse class="land" cx="70" cy="95" rx="52" ry="40"/>
+      <ellipse class="land" cx="190" cy="70" rx="45" ry="34"/>
+      <ellipse class="land" cx="170" cy="150" rx="48" ry="30"/>
+      <g class="call">
+        <circle cx="55" cy="85" r="4"/><circle cx="75" cy="100" r="4"/><circle cx="85" cy="80" r="4"/><circle cx="62" cy="110" r="4"/><circle cx="90" cy="105" r="4"/>
+        <circle cx="180" cy="60" r="4"/><circle cx="200" cy="75" r="4"/><circle cx="210" cy="58" r="4"/><circle cx="185" cy="82" r="4"/>
+        <circle cx="155" cy="145" r="4"/><circle cx="175" cy="158" r="4"/><circle cx="190" cy="142" r="4"/><circle cx="165" cy="160" r="4"/>
+      </g>
+      <text x="40" y="200">Discrete types: islands separated by water</text>
+      <path class="land" d="M420,70 C470,30 540,40 560,80 C600,60 660,80 670,120 C680,170 600,175 570,150 C540,180 470,175 450,140 C410,140 395,100 420,70 Z"/>
+      <g class="call2">
+        <circle cx="430" cy="95" r="4"/><circle cx="450" cy="80" r="4"/><circle cx="470" cy="100" r="4"/><circle cx="495" cy="88" r="4"/>
+        <circle cx="515" cy="105" r="4"/><circle cx="540" cy="95" r="4"/><circle cx="560" cy="115" r="4"/><circle cx="585" cy="100" r="4"/>
+        <circle cx="605" cy="120" r="4"/><circle cx="630" cy="110" r="4"/><circle cx="650" cy="130" r="4"/><circle cx="480" cy="130" r="4"/>
+        <circle cx="520" cy="140" r="4"/><circle cx="575" cy="140" r="4"/><circle cx="615" cy="150" r="4"/>
+      </g>
+      <text x="420" y="200">A continuum: one landmass, joined by isthmuses</text>
+    </svg>
+  </div>
+  <p>Each call becomes a point (here, a 32×32 spectrogram reduced to 10 principal components). Building a minimum spanning tree over the points (0-dimensional persistent homology) shows every place where two groups of calls first join, and how far apart they were. Each gap is divided by how tightly packed the calls are <em>at that spot</em>, so a sparse stretch of a continuum is not mistaken for a gap.</p>
+  <p>The largest gap is then compared with the largest gaps in thousands of smooth, gap-free clouds of the same size and the same intrinsic dimension, in three different shapes. The test uses whichever shape is most lenient. The output is a p-value ("is there empty space between types?") and a count of types: the number of gaps that beat chance, plus one.</p>
+
+  <h2 id="results">Results</h2>
+  <h3>1. Calibration on simulated repertoires</h3>
+  <figure class="wide" style="padding:0">
+    <img class="fig" src="fig2.png" alt="Three panels. (a) The 95th percentile of the largest chance gap by intrinsic dimension for uniform, Gaussian and exponential clouds. (b) The largest gap in each simulated repertoire against its threshold: discrete repertoires far above, continua below, with one false alarm in 20 runs. (c) Call types reported on continua with no types: gap test 1, HDBSCAN on PCA 8, Gaussian mixture 11, HDBSCAN on UMAP 16.5.">
+    <figcaption><strong>Figure 2.</strong> (a) How large a gap smooth data produces by chance depends mostly on dimension; shape shifts it by up to about 30%, and the test takes the highest curve. (b) Simulated whistle repertoires with 8 known types (blue) and four kinds of continuum (orange): types were detected in 10 of 10 runs, with 1 false alarm in 20 continuum runs, the 5% the test promises. (c) On the continua, every standard method reported several call types; the gap test reported one.</figcaption>
+  </figure>
+
+  <h3>2. Real data: Bengalese finches vs mice</h3>
+  <figure class="wide" style="padding:0">
+    <img class="fig" src="fig3.png" alt="Two panels. (a) Largest gap divided by the chance threshold: all 11 finches between about 3 and 7, all mouse runs just below 1. (b) Call types per animal: finch hand labels, gap test and HDBSCAN-on-UMAP counts are similar; for mice the gap test reports 1 every time while HDBSCAN-on-UMAP reports 2 to 24.">
+    <figcaption><strong>Figure 3.</strong> (a) In all 11 Bengalese finches (Koumura &amp; Okanoya data), syllable types are separated by gaps 3–7× larger than chance. In all 4 mice (Goffinet et al. recordings, analysed with all detections and with clean calls only), no gap beats chance. (b) Without the test, the number of mouse "call types" depends on the tool and even the run: 2 to 24 from HDBSCAN on UMAP.</figcaption>
+  </figure>
+  <p>Every prediction on real data was written down before running. On finches, cutting the significant gaps recovers the hand-labelled syllable types without using the labels: median adjusted Rand index 0.94 across 11 birds. For mice, the test agrees with Goffinet et al.: calls form a continuum.</p>
+
+  <h3>3. As a clustering step</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Method</th><th class="num">Finches: match to hand labels (median ARI, 11 birds)</th><th class="num">Simulated continua: types reported (truth 1)</th></tr></thead>
+    <tbody>
+      <tr><td>isthmus groups</td><td class="num">0.94</td><td class="num">1</td></tr>
+      <tr><td>HDBSCAN on PCA</td><td class="num">0.91</td><td class="num">8</td></tr>
+      <tr><td>HDBSCAN on UMAP</td><td class="num">0.83</td><td class="num">16.5</td></tr>
+      <tr><td>Gaussian mixture (BIC)</td><td class="num">0.73</td><td class="num">11</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Where types exist, the gap test's groups match hand labels about as well as the best standard method. Where they don't, it is the only method that does not invent them. The trade-off: when types nearly touch, it can merge them (on a simulated set with 8 close types it found 5, where HDBSCAN found 9). The practical recipe is <strong>gate first, then cluster</strong>: run the test, and only if it finds types, refine with a clustering method of choice.</p>
+
+  <h3>An aside: finch syllables that come in versions</h3>
+  <p>Where the test split one hand-labelled finch syllable into two groups, the split tracked song context in 10 of 10 cases, most strongly the preceding syllable, and not the recording session. Four of these splits survive removing duration. This is consistent with the sequence-dependent syllable structure described by Wohlgemuth, Sober &amp; Brainard (2010), and suggests that a minority of those context effects are large enough to form distinct versions of a syllable.</p>
+
+  <h2 id="limits">Limits and next steps</h2>
+  <ul>
+    <li><strong>Dolphins: inconclusive.</strong> On OpenWhistle signature whistles, our spectrogram features carried only weak identity information (a supervised classifier reached 45% against 14% chance), and no unsupervised method recovered individual dolphins. The test's "no gaps" verdict there reflects the features, not the animals. Richer audio features, and wild recordings such as the DCLDE 2011 annotated whistles, are the next step.</li>
+    <li><strong>Close types can merge.</strong> A power curve (how close two types can be before the test misses them) is in progress.</li>
+    <li><strong>Settings.</strong> Results use fixed defaults (15 neighbours, groups of at least 10 calls, PCA-10 features); a robustness sweep is planned.</li>
+    <li><strong>Mice.</strong> Four animals, with calls found by a simple detector rather than MUPET; consistent across all detections and clean calls only.</li>
+  </ul>
+
+  <h2 id="code">Code</h2>
+  <pre>pip install git+https://github.com/joshuadebellis/isthmus
+
+from isthmus import gap_test
+
+res = gap_test(Z)        # Z: (n_calls, n_features), e.g. PCA of spectrograms
+print(res)               # verdict, p-value, number of types, gaps, threshold
+res.is_discrete          # True if there is empty space between types
+res.groups               # one group label per call (-1 = too small to call)</pre>
+  <p class="note">All experiments, figures and the predictions written before each run are in the <a href="https://github.com/joshuadebellis/isthmus">repository</a>.</p>
+
+  <h2 id="refs">References and data</h2>
+  <ol class="refs">
+    <li>Sainburg T, Thielk M, Gentner TQ (2020). Finding, visualizing, and quantifying latent structure across diverse animal vocal repertoires. <em>PLoS Computational Biology</em> 16(10): e1008228.</li>
+    <li>Goffinet J, Brudner S, Mooney R, Pearson J (2021). Low-dimensional learned feature spaces quantify individual and group differences in vocal repertoires. <em>eLife</em> 10: e67855. Mouse recordings: Duke Research Data Repository, doi:10.7924/r4gq6zn8w (CC0).</li>
+    <li>Chari T, Pachter L (2023). The specious art of single-cell genomics. <em>PLoS Computational Biology</em>.</li>
+    <li>Wohlgemuth MJ, Sober SJ, Brainard MS (2010). Linked control of syllable sequence and phonology in birdsong. <em>Journal of Neuroscience</em>.</li>
+    <li>Koumura T, Okanoya K. Bengalese finch song recordings with syllable annotations (the "BirdsongRecognition" dataset).</li>
+    <li>Levina E, Bickel PJ (2004). Maximum likelihood estimation of intrinsic dimension. <em>NeurIPS</em>.</li>
+    <li>OpenWhistle dolphin whistle dataset (Hugging Face: dolphinteam/Whistle-Classification).</li>
+  </ol>
+
+  <footer>Joshua DeBellis · <a href="https://github.com/joshuadebellis">github.com/joshuadebellis</a> · Code MIT-licensed.</footer>
+</main>
+</body>
+</html>

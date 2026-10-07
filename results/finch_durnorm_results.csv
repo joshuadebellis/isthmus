@@ -1,0 +1,11 @@
+bird,label,n,orig_groups,new_pure_groups,agreement_ARI,survives,predicted,prediction_correct
+Bird0,0,369,3,1,0.0,False,vanish,True
+Bird0,6,166,2,2,1.0,True,vanish,False
+Bird2,1,75,2,1,0.0,False,survive,False
+Bird4,0,348,2,1,0.0,False,survive,False
+Bird5,1,117,2,3,0.899,True,vanish,False
+Bird5,2,379,2,3,0.228,False,survive,False
+Bird6,0,333,2,2,1.0,True,survive,True
+Bird8,0,543,2,2,1.0,True,survive,True
+Bird9,0,199,2,1,0.0,False,vanish,True
+Bird9,1,128,2,1,0.0,False,survive,False

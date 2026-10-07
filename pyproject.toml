@@ -1,0 +1,17 @@
+[project]
+name = "whistlesig"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "huggingface-hub>=2.1.1",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "pyarrow>=25.0.1",
+    "ripser>=0.6.15",
+    "scikit-learn>=1.7.2",
+    "scipy>=1.15.3",
+    "torch>=2.14.1",
+    "tqdm>=4.70.1",
+    "umap-learn>=0.5.12",
+    "xgboost>=3.2.0",
+]
