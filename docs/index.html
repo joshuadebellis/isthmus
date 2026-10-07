@@ -151,6 +151,7 @@ res = gap_test(Z)        # Z: (n_calls, n_features), e.g. PCA of spectrograms
 print(res)               # verdict, p-value, number of types, gaps, threshold
 res.is_discrete          # True if there is empty space between types
 res.groups               # one group label per call (-1 = too small to call)</pre>
+    <p><strong>Nothing here is specific to audio:</strong> <code>gap_test</code> takes any set of feature vectors (behaviour embeddings, single-cell profiles, latent spaces). So far it has only been validated on vocalizations.</p>
   <p class="note">All experiments, figures and the predictions written before each run are in the <a href="https://github.com/joshuadebellis/isthmus">repository</a>.</p>
 
   <h2 id="refs">References and data</h2>
