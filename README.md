@@ -39,4 +39,7 @@ Nothing here is specific to audio: `gap_test` takes any set of feature vectors (
 - Mice (4 animals, Goffinet et al. 2021 recordings): continuum in 8/8 runs, while HDBSCAN on UMAP reported 2-24 "types".
 - Dolphins (OpenWhistle): inconclusive; the spectrogram features carried little identity information.
 
+## Related Work
+Persistent homology has recently been used to describe animal vocalizations (Bond 2026 computes it within each labelled sperm whale coda type). To our knowledge, this is the first use of persistent homology with a calibrated null to test, without labels, whether a vocal repertoire is discrete or graded. It builds on classical cluster-significance tests (0-dimensional persistence is closely related to single-linkage clustering; see Hartigan's runt test, the gap statistic, SigClust, ToMATo); the new piece is a calibration that holds on curved, unevenly dense data like vocal repertoires.
+
 Data sources are listed in `DATA.md`. MIT license.
