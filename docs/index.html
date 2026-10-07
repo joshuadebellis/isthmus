@@ -102,7 +102,7 @@
   </div>
   <p>Each call becomes a point (here, a 32×32 spectrogram reduced to 10 principal components). Building a minimum spanning tree over the points (0-dimensional persistent homology) shows every place where two groups of calls first join, and how far apart they were. Each gap is divided by how tightly packed the calls are <em>at that spot</em>, so a sparse stretch of a continuum is not mistaken for a gap.</p>
   <p>The largest gap is then compared with the largest gaps in thousands of smooth, gap-free clouds of the same size and the same intrinsic dimension, in three different shapes. The test uses whichever shape is most lenient. The output is a p-value ("is there empty space between types?") and a count of types: the number of gaps that beat chance, plus one.</p>
-
+    <p class="note">Persistent homology has recently been used to describe animal vocalizations: Bond (2026) computes persistence diagrams within each labelled sperm whale coda type to characterize rhythm classes. To our knowledge, this is the first use of persistent homology with a calibrated null to test, without labels, whether a vocal repertoire is discrete or graded. It builds on a long line of cluster-significance tests (0-dimensional persistence is closely related to single-linkage clustering), including Hartigan's runt test, the gap statistic, SigClust and persistence-based clustering (ToMATo). The new piece is a calibration that holds on curved, unevenly dense data like vocal repertoires; a head-to-head comparison with those classical tests is planned.</p>
   <h2 id="results">Results</h2>
   <h3>1. Calibration on simulated repertoires</h3>
   <figure class="wide" style="padding:0">
@@ -163,6 +163,11 @@ res.groups               # one group label per call (-1 = too small to call)</pr
     <li>Koumura T, Okanoya K. Bengalese finch song recordings with syllable annotations (the "BirdsongRecognition" dataset).</li>
     <li>Levina E, Bickel PJ (2004). Maximum likelihood estimation of intrinsic dimension. <em>NeurIPS</em>.</li>
     <li>OpenWhistle dolphin whistle dataset (Hugging Face: dolphinteam/Whistle-Classification).</li>
+    <li>Bond AH (2026). Geometric structure in sperm whale communication: hyperbolic embeddings, topological analysis, and adversarial robustness. <em>bioRxiv</em> doi:10.64898/2026.03.11.711226.</li>
+    <li>Hartigan JA, Mohanty S (1992). The RUNT test for multimodality. <em>Journal of Classification</em> 9: 63–70.</li>
+    <li>Tibshirani R, Walther G, Hastie T (2001). Estimating the number of clusters in a data set via the gap statistic. <em>Journal of the Royal Statistical Society B</em> 63: 411–423.</li>
+    <li>Liu Y, Hayes DN, Nobel A, Marron JS (2008). Statistical significance of clustering for high-dimension, low-sample-size data. <em>Journal of the American Statistical Association</em> 103: 1281–1293.</li>
+    <li>Chazal F, Guibas LJ, Oudot SY, Skraba P (2013). Persistence-based clustering in Riemannian manifolds. <em>Journal of the ACM</em> 60(6).</li>
   </ol>
 
   <footer>Joshua DeBellis · <a href="https://github.com/joshuadebellis">github.com/joshuadebellis</a> · Code MIT-licensed.</footer>
